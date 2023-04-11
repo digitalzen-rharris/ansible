@@ -1,0 +1,16 @@
+# handlers for iscsi deployment role
+# RH
+# v1.1-CLD
+
+
+- name: restart iscsid
+  service: 
+    name: iscsid
+    state: restarted 
+    enabled: yes 
+
+- name: start multipath-tools
+  service:
+    name: multipath-tools
+    state: started
+    enabled: yes 

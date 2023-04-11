@@ -1,0 +1,5 @@
+- name: Install iSCSI tooling and multipath
+  hosts: <hosts connected to local synology storage - iscsi>
+  become: yes
+  roles: 
+    - iscsi_setup 

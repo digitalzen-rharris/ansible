@@ -1,0 +1,30 @@
+# set up iSCSI / other pre reqs for local k8's
+# RH
+#v1.1-CLD
+
+- name: install open-iscsi package
+  apt:
+    pkg: open-iscsi
+    state: present 
+  notify: 
+    - restart iscsid
+
+
+- name: install 
+  apt:
+    pkg: multipath-tools
+    state: present
+  notify:
+    - start multipath-tools
+
+
+- name: update /etc/iscsi/initiatorname.iscsi
+  lineinfile:
+    path: /etc/iscsi/initiatorname.iscsi
+    regex: '^InitiatorName='
+    line: "InitiatorName=iqn.{{ ansible_date_time['date'] }}.com.ubuntu:{{ inventory_hostname }}"
+    owner: root
+    group: root
+    mode: '0600'
+
+ # create task for iscsiadm --mode node --targetname iqn.2000-01.com.synology:Asteria.PasPi-MSR.6fdcc07ff17 --portal 192.168.0.177 --login   
