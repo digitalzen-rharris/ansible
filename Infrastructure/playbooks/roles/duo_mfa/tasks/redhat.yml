@@ -1,0 +1,64 @@
+# RHEL DUO Deployment tasks in the duo_mfa role. 
+
+
+- name: Move duosecurity.repo to /etc/yum.repos.d/
+  copy:
+    src: yum/duosecurity.repo
+    dest: /etc/yum.repos.d/ 
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Import a duo key 
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://duo.com/DUO-GPG-PUBLIC-KEY.asc 
+
+- name: install duo_unix package 
+  yum:
+    name: duo_unix
+    state: present 
+
+- name: pam updates to apply duo
+  block: 
+
+  - name: deploy login_duo.conf to /etc/duo         
+    copy:
+      src: duo/login_duo.conf
+      dest: /etc/duo/
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: deploy pam_duo.conf to /etc/duo         
+    copy:
+      src: duo/pam_duo.conf
+      dest: /etc/duo/
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: deploy /etc/pam.d/sshd PAM config for DUO          
+    copy:
+      src: duo/centos_pam_d_sshd
+      dest: /etc/pam.d/sshd
+      backup: True
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: deploy /etc/pam.d/system-auth for DUO       
+    copy:
+      src: duo/centos_pam_d_system_auth
+      dest: /etc/pam.d/system-auth
+      backup: True 
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: Change CHallenResponse in /etc/ssh/sshd_config to yes for DUO auth
+    ansible.builtin.lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^ChallengeResponseAuthentication '
+      line: ChallengeResponseAuthentication yes
+  when: skipPam is not defined

@@ -1,0 +1,9 @@
+# import duo tasks role for correct distro
+- name: Install the correct duo package for RHEL/CentOS
+  import_tasks: redhat.yml
+  when: ansible_facts['os_family']|lower == 'redhat' or ansible_facts['os_family']|lower == 'centos'
+
+- name: Install the correct duo package for Ubuntu
+  import_tasks: ubuntu.yml
+  when: ansible_facts['distribution']|lower == 'ubuntu'
+

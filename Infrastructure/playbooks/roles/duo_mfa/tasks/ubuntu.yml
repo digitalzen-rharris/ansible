@@ -1,0 +1,57 @@
+# Ubuntu DUO Deployment tasks in the duo_mfa role. 
+
+
+
+- name: deploy duosec.list to apt sources.list.d 
+  copy:
+    src: apt/duosec.list 
+    dest: /etc/apt/sources.list.d/duo.list
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: add duo gpg key
+  apt_key: 
+    url: https://duo.com/DUO-GPG-PUBLIC-KEY.asc 
+    state: present 
+
+- name: install duo-unix package
+  apt:
+    pkg: duo-unix 
+    state: present
+    update_cache: true 
+
+- name: pam updates to apply duo 
+  block: 
+  - name: deploy login_duo.conf to /etc/duo         
+    copy:
+      src: duo/login_duo.conf
+      dest: /etc/duo/
+      owner: sshd
+      group: root
+      mode: '0600'
+  - name: deploy pam_duo.conf to /etc/duo         
+    copy:
+      src: duo/pam_duo.conf
+      dest: /etc/duo/
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: deploy common-auth to /etc/pam.d         
+    copy:
+      src: duo/common-auth
+      dest: /etc/pam.d
+      owner: root
+      group: root
+      mode: '0600'
+      #when: skipPam is not defined 
+
+  - name: Change CHallenResponse in /etc/ssh/sshd_config to yes for DUO auth
+    ansible.builtin.lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^ChallengeResponseAuthentication '
+      line: ChallengeResponseAuthentication yes
+  when: skipPam is not defined 
+
+

@@ -1,0 +1,14 @@
+# Playbook to deploy duo on Ubuntu hosts
+#
+# updated 11.14.2022
+# to skip PAM changes define variable skipPam = True 
+# ie. -e "skipPam = True "
+
+- name: Deploy Duo DZE Hosts
+  hosts: all
+  gather_facts: true 
+  become: true 
+  roles: 
+    - role: duo_mfa
+#
+
