@@ -2,6 +2,7 @@
 # Update the $mynetworks parameter
 # Backup main.cf
 # Restart Postfix
+# v1.1-CLD 
   - name: Update mynetworks setting in /etc/postfix/main.cf
     ansible.builtin.lineinfile:
       path: /etc/postfix/main.cf

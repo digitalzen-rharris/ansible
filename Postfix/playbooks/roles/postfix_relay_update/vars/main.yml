@@ -1,3 +1,5 @@
 # Postfix/playbooks/roles/postfix_relay_update/vars/main.yml
 # updates the $mynetworks parameter in /etc/postfix/main.cf
+# IP Addressed Removed 
+# v1.1-CLD
 mnet: ip.addresses.allowed.to.relay

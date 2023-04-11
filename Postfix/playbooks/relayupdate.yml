@@ -1,3 +1,9 @@
+# Playbook to update $mynetworks paramaters in /etc/main.cf for 
+# local mail relay to external. 
+# R. H. 
+# Moving Local Repos to Cloud 2023/10/04
+# v1.1-CLD -Hostnames Sanitized
+
 - name: Update Relay Settings
   hosts: mail-server-host
   gather_facts: true 
