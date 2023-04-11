@@ -1,0 +1,6 @@
+- name: Update Relay Settings
+  hosts: mail-server-host
+  gather_facts: true 
+  become: true 
+  roles: 
+    - role: postfix_relay_update

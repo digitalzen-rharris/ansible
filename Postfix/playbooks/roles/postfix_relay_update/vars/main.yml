@@ -1,0 +1,3 @@
+# Postfix/playbooks/roles/postfix_relay_update/vars/main.yml
+# updates the $mynetworks parameter in /etc/postfix/main.cf
+mnet: ip.addresses.allowed.to.relay

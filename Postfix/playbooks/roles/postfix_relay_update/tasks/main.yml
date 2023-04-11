@@ -1,0 +1,19 @@
+# Postfix/playbooks/roles/postfix_relay_update/tasks/main.yml
+# Update the $mynetworks parameter
+# Backup main.cf
+# Restart Postfix
+  - name: Update mynetworks setting in /etc/postfix/main.cf
+    ansible.builtin.lineinfile:
+      path: /etc/postfix/main.cf
+      regexp: '^mynetworks = '
+      line: mynetworks = {{ mnet }}
+
+  - name: Backup /etc/postfix/main.cf 
+    ansible.builtin.fetch:
+      src: /etc/postfix/main.cf
+      dest: <path to backup location>
+
+  - name: Restart Postfix 
+    ansible.builtin.service:
+      name: postfix
+      state: restarted
